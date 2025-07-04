@@ -1,1 +1,0 @@
-# Genralized-dockerpipeline
