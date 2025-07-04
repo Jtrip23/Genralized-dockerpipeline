@@ -4,6 +4,8 @@ stages:
 variables:
   IMAGE_NAME: "$CI_PROJECT_NAME"
   IMAGE_TAG: "$CI_COMMIT_SHORT_SHA"
+  NEXUS_REPO_USER: "svc-apim-cicd-dev"
+  NEXUS_REPO_PASS: "F_arX1Z%fIQSfZEM@aJL9RRk*"
   NEXUS_REGISTRY: "fmk.nexus-ci.onefiserv.net"
   NEXUS_REPO_PATH: "apm/0006528"
   FULL_IMAGE_NAME: "$NEXUS_REGISTRY/$NEXUS_REPO_PATH/$IMAGE_NAME:$IMAGE_TAG"
@@ -14,22 +16,11 @@ build_and_push_image:
     - apihub-shell-prod
   script:
     - echo "Logging in to Nexus Docker registry..."
-    - echo "$NEXUS_REPO_PASS" | docker login -u "$NEXUS_REPO_USER" --password-stdin "$NEXUS_REGISTRY"
-
-    - echo "Checking for Dockerfile..."
-    - |
-      if [ ! -f Dockerfile ]; then
-        echo "ERROR: Dockerfile not found in the repository root. Aborting build."
-        exit 1
-      fi
-
-    - echo "Building Docker image for project $IMAGE_NAME..."
-    - docker build -t "$FULL_IMAGE_NAME" .
-
+    - echo "$NEXUS_REPO_PASS" | docker login -u $Nexus_REPO_USER -p $Nexus_REPO_PASS fmk.nexus-ci.onefiserv.net
+    - echo "Building Docker image..."
+    - docker build -t $FULL_IMAGE_NAME .
     - echo "Pushing Docker image to Nexus..."
-    - docker push "$FULL_IMAGE_NAME"
-
-    - echo "Docker image successfully pushed: $FULL_IMAGE_NAME"
+    - docker push $FULL_IMAGE_NAME
   rules:
     - changes:
         - "**/*"
