@@ -1,1 +1,3 @@
 
+Pipeline cannot be run.
+jobs:build_and_push_image:script config should be a string or a nested array of strings up to 10 levels deep
