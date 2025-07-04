@@ -7,14 +7,16 @@ variables:
   NEXUS_REGISTRY: "fmk.nexus-ci.onefiserv.net"
   NEXUS_REPO_PATH: "apm/0006528"
   FULL_IMAGE_NAME: "$NEXUS_REGISTRY/$NEXUS_REPO_PATH/$IMAGE_NAME:$IMAGE_TAG"
+  NEXUS_REPO_USER: "svc-apim-cicd-dev"
+  NEXUS_REPO_PASS: "F_arX1Z%fIQSfZEM@aJL9RRk*"
 
 build_and_push_image:
   stage: build_and_push
   tags:
-    - apimhub-shell-prod
+    - apimhub
   script:
     - echo "Logging in to Nexus Docker registry..."
-    - echo "$NEXUS_REPO_PASS" | docker login -u $NEXUS_REPO_USER --password-stdin $NEXUS_REGISTRY
+    - echo "$NEXUS_REPO_PASS" | docker login -u $Nexus_REPO_USER -p $Nexus_REPO_PASS fmk.nexus-ci.onefiserv.net
 
     # Generalized build step
     - |
@@ -34,10 +36,8 @@ build_and_push_image:
       else
         echo "Unknown project type - proceeding with generic docker build"
       fi
-
     - echo "Building Docker image..."
     - docker build -t $FULL_IMAGE_NAME .
-
     - echo "Pushing Docker image to Nexus..."
     - docker push $FULL_IMAGE_NAME
 
